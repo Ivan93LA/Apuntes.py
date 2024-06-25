@@ -1,8 +1,8 @@
-from fastapi import FastAPI
+from fastapi import APIRouter
 from pydantic import BaseModel
 
 
-app = FastAPI () #Instanciar 
+router = APIRouter () #Instanciar 
 
 
 #Entidad user
@@ -19,31 +19,31 @@ users_list = [ User(id=1, name="Ivan", surname="Leon", url="https://www.mercadon
 """Hacer las listas son much mas rápidas y mejores"""
 
 #Iniciar un servidor con  uvicorn users:app --reload
-@app.get("/usersjson") #Un get a un lugar 
+@router.get("/usersjson") #Un get a un lugar 
 async def usersjson(): #Siempre tiene que ser asincrona
     return [{"name": "Ivan", "Surname": "Leon", "url": "https://www.mercadona.es/", "age": 31},
             {"name": "Paula", "Surname": "Ayuga", "url": "https://www.mercadona.es/", "age": 25},
             {"name": "Francisco", "Surname": "Leon", "url": "https://www.mercadona.es/", "age": 54}]
 
-@app.get("/users") 
+@router.get("/users") 
 async def users(): 
     return users_list
 
 #Path
-@app.get("/user/{id}") #Pasar el parámetro del id
+@router.get("/user/{id}") #Pasar el parámetro del id
 async def users(id: int): 
     return search_user(id)
 
     
 
  #Query   
-@app.get("/userquery/") #Pasar el parámetro del id
+@router.get("/userquery/") #Pasar el parámetro del id
 async def users(id: int): 
    return search_user(id)
 
 #Hacemos la funcion de la llamada con la comprobación try
 
-@app.post("/user/")
+@router.post("/user/")
 async def user (user:User):
      if type(search_user(user.id)) == User:
          return {"Error": "El usuario ya existe"}
@@ -51,7 +51,7 @@ async def user (user:User):
          users_list.append(user)
          return user
 
-@app.put("/user/")
+@router.put("/user/")
 async def user(user:User): 
      
      found = False 
@@ -64,7 +64,7 @@ async def user(user:User):
      else:
         return user 
 
-@app.delete("/user/{id}")
+@router.delete("/user/{id}")
 async def user(id:int): 
 
     for  index, saved_user in enumerate(users_list):
