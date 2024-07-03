@@ -1,11 +1,12 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException, status
 from db.models.user import User
+from db.client import db_client
 
 #Instanciar 
 
 router = APIRouter (prefix="/userdb",
                    tags=["userdb"],
-                   responses={404: {"mesaage": "No encontrado"}})
+                   responses={status.HTTP_404_NOT_FOUND: {"mesaage": "No encontrado"}})
 
 #Entidad user
 
@@ -32,12 +33,12 @@ async def users(id: int):
 
 #Hacemos la funcion de la llamada con la comprobación try
 
-@router.post("/")
+@router.post("/", response_model=User, status_code=status.HTTP_201_CREATED)
 async def user (user:User):
-     if type(search_user(user.id)) == User:
-         return {"Error": "El usuario ya existe"}
-     else:
-         users_list.append(user)
+ #    if type(search_user(user.id)) == User:
+  #       return {"Error": "El usuario ya existe"}
+     #else:
+         db_client.local.users.insert_one(user)
          return user
 
 @router.put("/")

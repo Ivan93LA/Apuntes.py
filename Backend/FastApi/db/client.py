@@ -1,5 +1,5 @@
 from pymongo import MongoClient
 
-db_cñoemt = MongoClient()
+db_client = MongoClient()
 
 
