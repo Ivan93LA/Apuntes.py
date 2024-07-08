@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from db.models.user import User
+from db.schemas.user import user_schema
 from db.client import db_client
 
 #Instanciar 
@@ -12,7 +13,7 @@ router = APIRouter (prefix="/userdb",
 
 
 users_list = []
-"""Hacer las listas son much mas rápidas y mejores"""
+"""Hacer las listas son mucho mas rápidas y mejores"""
 
 
 @router.get("/") 
@@ -38,8 +39,14 @@ async def user (user:User):
  #    if type(search_user(user.id)) == User:
   #       return {"Error": "El usuario ya existe"}
      #else:
-         db_client.local.users.insert_one(user)
-         return user
+
+    user_dict = dict(user)
+    del user_dict["id"]
+
+
+    id = db_client.local.users.insert_one(user_dict).inserted_id
+    new_user = user_schema(db_client.local.users.find_one({"_id" : id}))
+    return User(**new_user)
 
 @router.put("/")
 async def user(user:User): 
