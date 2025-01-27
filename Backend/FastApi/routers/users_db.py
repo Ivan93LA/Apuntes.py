@@ -7,7 +7,7 @@ from db.client import db_client
 
 router = APIRouter (prefix="/userdb",
                    tags=["userdb"],
-                   responses={status.HTTP_404_NOT_FOUND: {"mesaage": "No encontrado"}})
+                   responses={status.HTTP_404_NOT_FOUND: {"mess1age": "No encontrado"}})
 
 #Entidad user
 
